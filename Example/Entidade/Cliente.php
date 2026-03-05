@@ -1,1 +1,631 @@
-<?phprequire_once('../Banco/Banco.php');class Cliente {    private $codCliente;    private $nome;    private $logradouro;    private $numero;    private $bairro;    private $cidade;    private $estado;    private $cep;    private $telefone;    private $celular;    private $cpf;    private $email;    private $datNascimento;    private $sexo;    private $profissao;    private $identidade;    private $obs;    private $usuario;    private $senha;    function get($atributo) {        return $this->$atributo;    }    function set($atributo, $valor) {        $this->$atributo = $valor;    }    function inserir() {        $sql = "			insert into				cliente					(					nome,					logradouro,					numero,					bairro,					cidade,					estado,                                        cep,					telefone,					celular,					cpf,					email,					datNascimento,                                        sexo,                                        profissao,                                        identidade,                                        obs,                                        usuario,                                        senha					)				values					(					'" . $this->nome . "',					'" . $this->logradouro . "',					'" . $this->numero . "',					'" . $this->bairro . "',					'" . $this->cidade . "',					'" . $this->estado . "',                                        '" . $this->cep . "',					'" . $this->telefone . "',					'" . $this->celular . "',					'" . $this->cpf . "',					'" . $this->email . "',					'" . $this->datNascimento . "',                                        '" . $this->sexo . "',					'" . $this->profissao . "',					'" . $this->identidade . "',                                        '" . $this->obs . "',                                        '" . $this->usuario . "',                                        '" . $this->senha . "'					)";        $objBanco = new Banco();        return $retorno = $objBanco->executar($sql);    }    function excluir() {        $sql = "		delete			from				cliente			where				codCliente = '" . $this->codCliente . "'";        $objBanco = new Banco();        return $retorno = $objBanco->executar($sql);    }    function alterar() {        $sql = "update cliente set					nome 	 		= '" . $this->nome . "',					logradouro		= '" . $this->logradouro . "',					numero			= '" . $this->numero . "',					bairro			= '" . $this->bairro . "',					cidade			= '" . $this->cidade . "',					estado			= '" . $this->estado . "',                                        cep			= '" . $this->cep . "',					telefone		= '" . $this->telefone . "',					celular			= '" . $this->celular . "',					cpf			= '" . $this->cpf . "',					email			= '" . $this->email . "',					datNascimento           = '" . $this->datNascimento . "',                                        sexo                    = '" . $this->sexo . "',                                        profissao               = '" . $this->profissao . "',                                        identidade              = '" . $this->identidade . "',                                        obs                     = '" . $this->obs . "',                                        usuario                 = '" . $this->usuario . "',                                        senha                   = '" . $this->senha . "'				where					codCliente 	= '" . $this->codCliente . "'";        $objBanco = new Banco();        return $retorno = $objBanco->executar($sql);    }    function buscarTodos() {        //$sql = "select * from cliente where nome like _utf8 '%assuncão%' COLLATE utf8_unicode_ci";        $sql = "			select				codCliente,				nome,				logradouro,				numero,				bairro,				cidade,				estado,                                cep,				telefone,				celular,				cpf,				email,				datNascimento,                                sexo,                                profissao,                                identidade,                                obs,                                usuario,                                senha			from				cliente			order by				nome ASC		";        //$sql = "SELECT * FROM cliente WHERE nome LIKE '%s Assunçao%' COLLATE Latin1_bin";        $objBanco = new Banco();        $dados = $objBanco->executar($sql);        $linhas = mysql_num_rows($dados);        $objClientes = array();        for ($i = 0; $i < $linhas; $i++) {            $codCliente = mysql_result($dados, $i, 'codCliente');            $nome = mysql_result($dados, $i, 'nome');            $logradouro = mysql_result($dados, $i, 'logradouro');            $numero = mysql_result($dados, $i, 'numero');            $bairro = mysql_result($dados, $i, 'bairro');            $cidade = mysql_result($dados, $i, 'cidade');            $estado = mysql_result($dados, $i, 'estado');            $cep = mysql_result($dados, $i, 'cep');            $telefone = mysql_result($dados, $i, 'telefone');            $celular = mysql_result($dados, $i, 'celular');            $cpf = mysql_result($dados, $i, 'cpf');            $email = mysql_result($dados, $i, 'email');            $datNascimento = mysql_result($dados, $i, 'datNascimento');            $sexo = mysql_result($dados, $i, 'sexo');            $profissao = mysql_result($dados, $i, 'profissao');            $identidade = mysql_result($dados, $i, 'identidade');            $obs = mysql_result($dados, $i, 'obs');            $usuario = mysql_result($dados, $i, 'usuario');            $senha = mysql_result($dados, $i, 'senha');            $novaDat = explode('-', $datNascimento);            $novaData = $novaDat[2] . '/' . $novaDat[1] . '/' . $novaDat[0];            $objCliente = new Cliente;            $objCliente->set('codCliente', $codCliente);            $objCliente->set('nome', $nome);            $objCliente->set('logradouro', $logradouro);            $objCliente->set('numero', $numero);            $objCliente->set('bairro', $bairro);            $objCliente->set('cidade', $cidade);            $objCliente->set('estado', $estado);            $objCliente->set('cep', $cep);            $objCliente->set('telefone', $telefone);            $objCliente->set('celular', $celular);            $objCliente->set('cpf', $cpf);            $objCliente->set('email', $email);            $objCliente->set('datNascimento', $novaData);            $objCliente->set('sexo', $sexo);            $objCliente->set('profissao', $profissao);            $objCliente->set('identidade', $identidade);            $objCliente->set('obs', $obs);            $objCliente->set('usuario', $usuario);            $objCliente->set('senha', $senha);            array_push($objClientes, $objCliente);        }        return $objClientes;    }    function buscarWhere($campo, $operador, $valor, $ordenar, $extra) {        if ($operador == "like") {            $valor = "%" . $valor . "%";        }        if ($operador == "letra"){            $valor = $valor . "%";            $operador = "like";        }        $sql = "			select				codCliente,				nome,				logradouro,				numero,				bairro,				cidade,				estado,                                cep,				telefone,				celular,				cpf,				email,				datNascimento,                                sexo,                                profissao,                                identidade,                                obs,                                usuario,                                senha			from				cliente			where				" . $campo . " " . $operador . " '" . $valor . "'			order by				" . $ordenar . " ASC		";        $objBanco = new Banco();        $dados = $objBanco->executar($sql);        $linhas = mysql_num_rows($dados);        $objClientes = array();        for ($i = 0; $i < $linhas; $i++) {            $codCliente = mysql_result($dados, $i, 'codCliente');            $nome = mysql_result($dados, $i, 'nome');            $logradouro = mysql_result($dados, $i, 'logradouro');            $numero = mysql_result($dados, $i, 'numero');            $bairro = mysql_result($dados, $i, 'bairro');            $cidade = mysql_result($dados, $i, 'cidade');            $estado = mysql_result($dados, $i, 'estado');            $cep = mysql_result($dados, $i, 'cep');            $telefone = mysql_result($dados, $i, 'telefone');            $celular = mysql_result($dados, $i, 'celular');            $cpf = mysql_result($dados, $i, 'cpf');            $email = mysql_result($dados, $i, 'email');            $datNascimento = mysql_result($dados, $i, 'datNascimento');            $sexo = mysql_result($dados, $i, 'sexo');            $profissao = mysql_result($dados, $i, 'profissao');            $identidade = mysql_result($dados, $i, 'identidade');            $obs = mysql_result($dados, $i, 'obs');            $usuario = mysql_result($dados, $i, 'usuario');            $senha = mysql_result($dados, $i, 'senha');            $novaDat = explode('-', $datNascimento);            $novaData = $novaDat[2] . '/' . $novaDat[1] . '/' . $novaDat[0];            $objCliente = new Cliente;            $objCliente->set('codCliente', $codCliente);            $objCliente->set('nome', $nome);            $objCliente->set('logradouro', $logradouro);            $objCliente->set('numero', $numero);            $objCliente->set('bairro', $bairro);            $objCliente->set('cidade', $cidade);            $objCliente->set('estado', $estado);            $objCliente->set('cep', $cep);            $objCliente->set('telefone', $telefone);            $objCliente->set('celular', $celular);            $objCliente->set('cpf', $cpf);            $objCliente->set('email', $email);            $objCliente->set('datNascimento', $novaData);            $objCliente->set('sexo', $sexo);            $objCliente->set('profissao', $profissao);            $objCliente->set('identidade', $identidade);            $objCliente->set('obs', $obs);            $objCliente->set('usuario', $usuario);            $objCliente->set('senha', $senha);            array_push($objClientes, $objCliente);        }        return $objClientes;    }    function buscarPorId($codClienteBusca) {        $sql = "			select				nome,				logradouro,				numero,				bairro,				cidade,				estado,                                cep,				telefone,				celular,				cpf,				email,				datNascimento,                                sexo,                                profissao,                                identidade,                                obs,                                usuario,                                senha			from				cliente			where				codCliente = '" . $codClienteBusca . "'		";        $objBanco = new Banco();        $dados = $objBanco->executar($sql);        $linhas = mysql_num_rows($dados);        if ($linhas > 0) {            $nome = mysql_result($dados, 0, 'nome');            $logradouro = mysql_result($dados, 0, 'logradouro');            $numero = mysql_result($dados, 0, 'numero');            $bairro = mysql_result($dados, 0, 'bairro');            $cidade = mysql_result($dados, 0, 'cidade');            $estado = mysql_result($dados, 0, 'estado');            $cep = mysql_result($dados, 0, 'cep');            $telefone = mysql_result($dados, 0, 'telefone');            $celular = mysql_result($dados, 0, 'celular');            $cpf = mysql_result($dados, 0, 'cpf');            $email = mysql_result($dados, 0, 'email');            $datNascimento = mysql_result($dados, 0, 'datNascimento');            $sexo = mysql_result($dados, 0, 'sexo');            $profissao = mysql_result($dados, 0, 'profissao');            $identidade = mysql_result($dados, 0, 'identidade');            $obs = mysql_result($dados, 0, 'obs');            $usuario = mysql_result($dados, 0, 'usuario');            $senha = mysql_result($dados, 0, 'senha');            $novaDat = explode('-', $datNascimento);            $novaData = $novaDat[2] . '/' . $novaDat[1] . '/' . $novaDat[0];            $objCliente = new Cliente;            $objCliente->set('nome', $nome);            $objCliente->set('logradouro', $logradouro);            $objCliente->set('numero', $numero);            $objCliente->set('bairro', $bairro);            $objCliente->set('cidade', $cidade);            $objCliente->set('estado', $estado);            $objCliente->set('cep', $cep);            $objCliente->set('telefone', $telefone);            $objCliente->set('celular', $celular);            $objCliente->set('cpf', $cpf);            $objCliente->set('email', $email);            $objCliente->set('datNascimento', $novaData);            $objCliente->set('sexo', $sexo);            $objCliente->set('profissao', $profissao);            $objCliente->set('identidade', $identidade);            $objCliente->set('obs', $obs);            $objCliente->set('usuario', $usuario);            $objCliente->set('senha', $senha);            return $objCliente;        } else {            $objCliente = new Cliente;            $objCliente->set('nome', "(Cliente não encontrado!)");            $objCliente->set('logradouro', "(Cliente não encontrado!)");            $objCliente->set('numero', "(Cliente não encontrado!)");            $objCliente->set('bairro', "(Cliente não encontrado!)");            $objCliente->set('cidade', "(Cliente não encontrado!)");            $objCliente->set('estado', "(Cliente não encontrado!)");            $objCliente->set('cep', "(Cliente não encontrado!)");            $objCliente->set('telefone', "(Cliente não encontrado!)");            $objCliente->set('celular', "(Cliente não encontrado!)");            $objCliente->set('cpf', "(Cliente não encontrado!)");            $objCliente->set('email', "(Cliente não encontrado!)");            $objCliente->set('datNascimento', "(Cliente não encontrado!)");            $objCliente->set('sexo', "(Cliente não encontrado!)");            $objCliente->set('profissao', "(Cliente não encontrado!)");            $objCliente->set('identidade', "(Cliente não encontrado!)");            $objCliente->set('obs', "(Cliente não encontrado!)");            $objCliente->set('usuario', "(Cliente não encontrado!)");            $objCliente->set('senha', "(Cliente não encontrado!)");            return $objCliente;        }    }    function buscarPorNome($nome) {        $sql = "			select				codCliente,				nome,				logradouro,				numero,				bairro,				cidade,				estado,                                cep,				telefone,				celular,				cpf,				email,				datNascimento,                                sexo,                                profissao,                                identidade,                                obs,                                usuario,                                senha			from				cliente			where				nome like '%" . $nome . "%'			order by				nome ASC		";        $objBanco = new Banco();        $dados = $objBanco->executar($sql);        $linhas = mysql_num_rows($dados);        $objClientes = array();        for ($i = 0; $i < $linhas; $i++) {            $codCliente = mysql_result($dados, $i, 'codCliente');            $nome = mysql_result($dados, $i, 'nome');            $logradouro = mysql_result($dados, $i, 'logradouro');            $numero = mysql_result($dados, $i, 'numero');            $bairro = mysql_result($dados, $i, 'bairro');            $cidade = mysql_result($dados, $i, 'cidade');            $estado = mysql_result($dados, $i, 'estado');            $cep = mysql_result($dados, $i, 'cep');            $telefone = mysql_result($dados, $i, 'telefone');            $celular = mysql_result($dados, $i, 'celular');            $cpf = mysql_result($dados, $i, 'cpf');            $email = mysql_result($dados, $i, 'email');            $datNascimento = mysql_result($dados, $i, 'datNascimento');            $sexo = mysql_result($dados, $i, 'sexo');            $profissao = mysql_result($dados, $i, 'profissao');            $identidade = mysql_result($dados, $i, 'identidade');            $obs = mysql_result($dados, $i, 'obs');            $usuario = mysql_result($dados, $i, 'usuario');            $senha = mysql_result($dados, $i, 'senha');            $novaDat = explode('-', $datNascimento);            $novaData = $novaDat[2] . '/' . $novaDat[1] . '/' . $novaDat[0];            $objCliente = new Cliente;            $objCliente->set('codCliente', $codCliente);            $objCliente->set('nome', $nome);            $objCliente->set('logradouro', $logradouro);            $objCliente->set('numero', $numero);            $objCliente->set('bairro', $bairro);            $objCliente->set('cidade', $cidade);            $objCliente->set('estado', $estado);            $objCliente->set('cep', $cep);            $objCliente->set('telefone', $telefone);            $objCliente->set('celular', $celular);            $objCliente->set('cpf', $cpf);            $objCliente->set('email', $email);            $objCliente->set('datNascimento', $novaData);            $objCliente->set('sexo', $sexo);            $objCliente->set('profissao', $profissao);            $objCliente->set('identidade', $identidade);            $objCliente->set('obs', $obs);            $objCliente->set('usuario', $usuario);            $objCliente->set('senha', $senha);            array_push($objClientes, $objCliente);        }        return $objClientes;    }    function buscarData() {        $data = date('Ymd');        $month = substr($data, 4, 2);        $sql = "			select				codCliente,				nome,				logradouro,				numero,				bairro,				cidade,				estado,                                cep,				telefone,				celular,				cpf,				email,				datNascimento,                                sexo,                                profissao,                                identidade,                                obs,                                usuario,                                senha			from				cliente			where				MONTH(datNascimento) = '" . $month . "'			order by				nome ASC		";        $objBanco = new Banco();        $dados = $objBanco->executar($sql);        $linhas = mysql_num_rows($dados);        $objClientes = array();        for ($i = 0; $i < $linhas; $i++) {            $codCliente = mysql_result($dados, $i, 'codCliente');            $nome = mysql_result($dados, $i, 'nome');            $logradouro = mysql_result($dados, $i, 'logradouro');            $numero = mysql_result($dados, $i, 'numero');            $bairro = mysql_result($dados, $i, 'bairro');            $cidade = mysql_result($dados, $i, 'cidade');            $estado = mysql_result($dados, $i, 'estado');            $cep = mysql_result($dados, $i, 'cep');            $telefone = mysql_result($dados, $i, 'telefone');            $celular = mysql_result($dados, $i, 'celular');            $cpf = mysql_result($dados, $i, 'cpf');            $email = mysql_result($dados, $i, 'email');            $datNascimento = mysql_result($dados, $i, 'datNascimento');            $sexo = mysql_result($dados, $i, 'sexo');            $profissao = mysql_result($dados, $i, 'profissao');            $identidade = mysql_result($dados, $i, 'identidade');            $obs = mysql_result($dados, $i, 'obs');            $usuario = mysql_result($dados, $i, 'usuario');            $senha = mysql_result($dados, $i, 'senha');            $novaDat = explode('-', $datNascimento);            $novaData = $novaDat[2] . '/' . $novaDat[1] . '/' . $novaDat[0];            $objCliente = new Cliente;            $objCliente->set('codCliente', $codCliente);            $objCliente->set('nome', $nome);            $objCliente->set('logradouro', $logradouro);            $objCliente->set('numero', $numero);            $objCliente->set('bairro', $bairro);            $objCliente->set('cidade', $cidade);            $objCliente->set('estado', $estado);            $objCliente->set('cep', $cep);            $objCliente->set('telefone', $telefone);            $objCliente->set('celular', $celular);            $objCliente->set('cpf', $cpf);            $objCliente->set('email', $email);            $objCliente->set('datNascimento', $novaData);            $objCliente->set('sexo', $sexo);            $objCliente->set('profissao', $profissao);            $objCliente->set('identidade', $identidade);            $objCliente->set('obs', $obs);            $objCliente->set('usuario', $usuario);            $objCliente->set('senha', $senha);            array_push($objClientes, $objCliente);        }        return $objClientes;    }    function selectClientes($codClienteSelecionado) {        $sql = "			select				codCliente,				nome			from				cliente			order by				nome ASC		";        $objBanco = new Banco();        $dados = $objBanco->executar($sql);        $linhas = mysql_num_rows($dados);        $selectClientes = "<select name ='cliente'>";        $selectClientes .= "<option>Selecione o Cliente</option>";        for ($i = 0; $i < $linhas; $i++) {            $codCliente = mysql_result($dados, $i, 'codCliente');            $nome = mysql_result($dados, $i, 'nome');            if ($codCliente == $codClienteSelecionado) {                $selected = " selected=selected";            } else {                $selected = "";            }            $selectClientes .= "<option value='$codCliente'" . $selected . ">$nome</option>";        }        $selectClientes .= "</select>";        echo $selectClientes;    }}?>
+<?php
+
+require_once('../Banco/Banco.php');
+
+class Cliente
+{
+
+    private $codCliente;
+    private $nome;
+    private $logradouro;
+    private $numero;
+    private $bairro;
+    private $cidade;
+    private $estado;
+    private $cep;
+    private $telefone;
+    private $celular;
+    private $cpf;
+    private $email;
+    private $datNascimento;
+    private $sexo;
+    private $profissao;
+    private $identidade;
+    private $obs;
+    private $usuario;
+    private $senha;
+
+    function get($atributo)
+    {
+        return $this->$atributo;
+    }
+
+    function set($atributo, $valor)
+    {
+        $this->$atributo = $valor;
+    }
+
+    function inserir()
+    {
+        $sql = "
+			insert into
+				cliente
+					(
+					nome,
+					logradouro,
+					numero,
+					bairro,
+					cidade,
+					estado,
+                    cep,
+					telefone,
+					celular,
+					cpf,
+					email,
+					datNascimento,
+                    sexo,
+                    profissao,
+                    identidade,
+                    obs,
+                    usuario,
+                    senha
+					)
+				values
+					(
+					'" . $this->nome . "',
+					'" . $this->logradouro . "',
+					'" . $this->numero . "',
+					'" . $this->bairro . "',
+					'" . $this->cidade . "',
+					'" . $this->estado . "',
+                    '" . $this->cep . "',
+					'" . $this->telefone . "',
+					'" . $this->celular . "',
+					'" . $this->cpf . "',
+					'" . $this->email . "',
+					'" . $this->datNascimento . "',
+                    '" . $this->sexo . "',
+					'" . $this->profissao . "',
+					'" . $this->identidade . "',
+                    '" . $this->obs . "',
+                    '" . $this->usuario . "',
+                    '" . $this->senha . "'
+					)";
+
+        $objBanco = new Banco();
+        return $retorno = $objBanco->executar($sql);
+    }
+
+    function excluir()
+    {
+
+        $sql = "
+		delete
+			from
+				cliente
+			where
+				codCliente = '" . $this->codCliente . "'";
+
+        $objBanco = new Banco();
+        return $retorno = $objBanco->executar($sql);
+    }
+
+    function alterar()
+    {
+
+        $sql = "update cliente set
+					nome 	 		= '" . $this->nome . "',
+					logradouro		= '" . $this->logradouro . "',
+					numero			= '" . $this->numero . "',
+					bairro			= '" . $this->bairro . "',
+					cidade			= '" . $this->cidade . "',
+					estado			= '" . $this->estado . "',
+                    cep			    = '" . $this->cep . "',
+					telefone		= '" . $this->telefone . "',
+					celular			= '" . $this->celular . "',
+					cpf			    = '" . $this->cpf . "',
+					email			= '" . $this->email . "',
+					datNascimento   = '" . $this->datNascimento . "',
+                    sexo            = '" . $this->sexo . "',
+                    profissao       = '" . $this->profissao . "',
+                    identidade      = '" . $this->identidade . "',
+                    obs             = '" . $this->obs . "',
+                    usuario         = '" . $this->usuario . "',
+                    senha           = '" . $this->senha . "'
+				where
+					codCliente 	= '" . $this->codCliente . "'";
+
+        $objBanco = new Banco();
+        return $retorno = $objBanco->executar($sql);
+    }
+
+    function buscarTodos()
+    {
+
+        //$sql = "select * from cliente where nome like _utf8 '%assuncão%' COLLATE utf8_unicode_ci";
+        $sql = "
+			select
+				codCliente,
+				nome,
+				logradouro,
+				numero,
+				bairro,
+				cidade,
+				estado,
+                cep,
+				telefone,
+				celular,
+				cpf,
+				email,
+				datNascimento,
+                sexo,
+                profissao,
+                identidade,
+                obs,
+                usuario,
+                senha
+			from
+				cliente
+			order by
+				nome ASC
+		";
+        //$sql = "SELECT * FROM cliente WHERE nome LIKE '%s Assunçao%' COLLATE Latin1_bin";
+
+        $objBanco = new Banco();
+        $dados = $objBanco->executar($sql);
+        $linhas = mysql_num_rows($dados);
+
+        $objClientes = array();
+
+        for ($i = 0; $i < $linhas; $i++) {
+
+            $codCliente = mysql_result($dados, $i, 'codCliente');
+            $nome = mysql_result($dados, $i, 'nome');
+            $logradouro = mysql_result($dados, $i, 'logradouro');
+            $numero = mysql_result($dados, $i, 'numero');
+            $bairro = mysql_result($dados, $i, 'bairro');
+            $cidade = mysql_result($dados, $i, 'cidade');
+            $estado = mysql_result($dados, $i, 'estado');
+            $cep = mysql_result($dados, $i, 'cep');
+            $telefone = mysql_result($dados, $i, 'telefone');
+            $celular = mysql_result($dados, $i, 'celular');
+            $cpf = mysql_result($dados, $i, 'cpf');
+            $email = mysql_result($dados, $i, 'email');
+            $datNascimento = mysql_result($dados, $i, 'datNascimento');
+            $sexo = mysql_result($dados, $i, 'sexo');
+            $profissao = mysql_result($dados, $i, 'profissao');
+            $identidade = mysql_result($dados, $i, 'identidade');
+            $obs = mysql_result($dados, $i, 'obs');
+            $usuario = mysql_result($dados, $i, 'usuario');
+            $senha = mysql_result($dados, $i, 'senha');
+
+            $novaDat = explode('-', $datNascimento);
+            $novaData = $novaDat[2] . '/' . $novaDat[1] . '/' . $novaDat[0];
+
+            $objCliente = new Cliente;
+            $objCliente->set('codCliente', $codCliente);
+            $objCliente->set('nome', $nome);
+            $objCliente->set('logradouro', $logradouro);
+            $objCliente->set('numero', $numero);
+            $objCliente->set('bairro', $bairro);
+            $objCliente->set('cidade', $cidade);
+            $objCliente->set('estado', $estado);
+            $objCliente->set('cep', $cep);
+            $objCliente->set('telefone', $telefone);
+            $objCliente->set('celular', $celular);
+            $objCliente->set('cpf', $cpf);
+            $objCliente->set('email', $email);
+            $objCliente->set('datNascimento', $novaData);
+            $objCliente->set('sexo', $sexo);
+            $objCliente->set('profissao', $profissao);
+            $objCliente->set('identidade', $identidade);
+            $objCliente->set('obs', $obs);
+            $objCliente->set('usuario', $usuario);
+            $objCliente->set('senha', $senha);
+
+            array_push($objClientes, $objCliente);
+        }
+        return $objClientes;
+    }
+
+    function buscarWhere($campo, $operador, $valor, $ordenar, $extra)
+    {
+        if ($operador == "like") {
+            $valor = "%" . $valor . "%";
+        }
+        if ($operador == "letra") {
+            $valor = $valor . "%";
+            $operador = "like";
+        }
+        $sql = "
+			select
+				codCliente,
+				nome,
+				logradouro,
+				numero,
+				bairro,
+				cidade,
+				estado,
+                cep,
+				telefone,
+				celular,
+				cpf,
+				email,
+				datNascimento,
+                sexo,
+                profissao,
+                identidade,
+                obs,
+                usuario,
+                senha
+			from
+				cliente
+			where
+				" . $campo . " " . $operador . " '" . $valor . "'
+			order by
+				" . $ordenar . " ASC
+		";
+
+        $objBanco = new Banco();
+        $dados = $objBanco->executar($sql);
+        $linhas = mysql_num_rows($dados);
+
+        $objClientes = array();
+
+        for ($i = 0; $i < $linhas; $i++) {
+
+            $codCliente = mysql_result($dados, $i, 'codCliente');
+            $nome = mysql_result($dados, $i, 'nome');
+            $logradouro = mysql_result($dados, $i, 'logradouro');
+            $numero = mysql_result($dados, $i, 'numero');
+            $bairro = mysql_result($dados, $i, 'bairro');
+            $cidade = mysql_result($dados, $i, 'cidade');
+            $estado = mysql_result($dados, $i, 'estado');
+            $cep = mysql_result($dados, $i, 'cep');
+            $telefone = mysql_result($dados, $i, 'telefone');
+            $celular = mysql_result($dados, $i, 'celular');
+            $cpf = mysql_result($dados, $i, 'cpf');
+            $email = mysql_result($dados, $i, 'email');
+            $datNascimento = mysql_result($dados, $i, 'datNascimento');
+            $sexo = mysql_result($dados, $i, 'sexo');
+            $profissao = mysql_result($dados, $i, 'profissao');
+            $identidade = mysql_result($dados, $i, 'identidade');
+            $obs = mysql_result($dados, $i, 'obs');
+            $usuario = mysql_result($dados, $i, 'usuario');
+            $senha = mysql_result($dados, $i, 'senha');
+
+            $novaDat = explode('-', $datNascimento);
+            $novaData = $novaDat[2] . '/' . $novaDat[1] . '/' . $novaDat[0];
+
+            $objCliente = new Cliente;
+            $objCliente->set('codCliente', $codCliente);
+            $objCliente->set('nome', $nome);
+            $objCliente->set('logradouro', $logradouro);
+            $objCliente->set('numero', $numero);
+            $objCliente->set('bairro', $bairro);
+            $objCliente->set('cidade', $cidade);
+            $objCliente->set('estado', $estado);
+            $objCliente->set('cep', $cep);
+            $objCliente->set('telefone', $telefone);
+            $objCliente->set('celular', $celular);
+            $objCliente->set('cpf', $cpf);
+            $objCliente->set('email', $email);
+            $objCliente->set('datNascimento', $novaData);
+            $objCliente->set('sexo', $sexo);
+            $objCliente->set('profissao', $profissao);
+            $objCliente->set('identidade', $identidade);
+            $objCliente->set('obs', $obs);
+            $objCliente->set('usuario', $usuario);
+            $objCliente->set('senha', $senha);
+
+            array_push($objClientes, $objCliente);
+        }
+        return $objClientes;
+    }
+
+    function buscarPorId($codClienteBusca)
+    {
+
+        $sql = "
+			select
+				nome,
+				logradouro,
+				numero,
+				bairro,
+				cidade,
+				estado,
+                cep,
+				telefone,
+				celular,
+				cpf,
+				email,
+				datNascimento,
+                sexo,
+                profissao,
+                identidade,
+                obs,
+                usuario,
+                senha
+			from
+				cliente
+			where
+				codCliente = '" . $codClienteBusca . "'
+		";
+
+        $objBanco = new Banco();
+        $dados = $objBanco->executar($sql);
+        $linhas = mysql_num_rows($dados);
+        if ($linhas > 0) {
+
+            $nome = mysql_result($dados, 0, 'nome');
+            $logradouro = mysql_result($dados, 0, 'logradouro');
+            $numero = mysql_result($dados, 0, 'numero');
+            $bairro = mysql_result($dados, 0, 'bairro');
+            $cidade = mysql_result($dados, 0, 'cidade');
+            $estado = mysql_result($dados, 0, 'estado');
+            $cep = mysql_result($dados, 0, 'cep');
+            $telefone = mysql_result($dados, 0, 'telefone');
+            $celular = mysql_result($dados, 0, 'celular');
+            $cpf = mysql_result($dados, 0, 'cpf');
+            $email = mysql_result($dados, 0, 'email');
+            $datNascimento = mysql_result($dados, 0, 'datNascimento');
+            $sexo = mysql_result($dados, 0, 'sexo');
+            $profissao = mysql_result($dados, 0, 'profissao');
+            $identidade = mysql_result($dados, 0, 'identidade');
+            $obs = mysql_result($dados, 0, 'obs');
+            $usuario = mysql_result($dados, 0, 'usuario');
+            $senha = mysql_result($dados, 0, 'senha');
+
+            $novaDat = explode('-', $datNascimento);
+            $novaData = $novaDat[2] . '/' . $novaDat[1] . '/' . $novaDat[0];
+
+            $objCliente = new Cliente;
+            $objCliente->set('nome', $nome);
+            $objCliente->set('logradouro', $logradouro);
+            $objCliente->set('numero', $numero);
+            $objCliente->set('bairro', $bairro);
+            $objCliente->set('cidade', $cidade);
+            $objCliente->set('estado', $estado);
+            $objCliente->set('cep', $cep);
+            $objCliente->set('telefone', $telefone);
+            $objCliente->set('celular', $celular);
+            $objCliente->set('cpf', $cpf);
+            $objCliente->set('email', $email);
+            $objCliente->set('datNascimento', $novaData);
+            $objCliente->set('sexo', $sexo);
+            $objCliente->set('profissao', $profissao);
+            $objCliente->set('identidade', $identidade);
+            $objCliente->set('obs', $obs);
+            $objCliente->set('usuario', $usuario);
+            $objCliente->set('senha', $senha);
+
+            return $objCliente;
+        } else {
+            $objCliente = new Cliente;
+            $objCliente->set('nome', "(Cliente não encontrado!)");
+            $objCliente->set('logradouro', "(Cliente não encontrado!)");
+            $objCliente->set('numero', "(Cliente não encontrado!)");
+            $objCliente->set('bairro', "(Cliente não encontrado!)");
+            $objCliente->set('cidade', "(Cliente não encontrado!)");
+            $objCliente->set('estado', "(Cliente não encontrado!)");
+            $objCliente->set('cep', "(Cliente não encontrado!)");
+            $objCliente->set('telefone', "(Cliente não encontrado!)");
+            $objCliente->set('celular', "(Cliente não encontrado!)");
+            $objCliente->set('cpf', "(Cliente não encontrado!)");
+            $objCliente->set('email', "(Cliente não encontrado!)");
+            $objCliente->set('datNascimento', "(Cliente não encontrado!)");
+            $objCliente->set('sexo', "(Cliente não encontrado!)");
+            $objCliente->set('profissao', "(Cliente não encontrado!)");
+            $objCliente->set('identidade', "(Cliente não encontrado!)");
+            $objCliente->set('obs', "(Cliente não encontrado!)");
+            $objCliente->set('usuario', "(Cliente não encontrado!)");
+            $objCliente->set('senha', "(Cliente não encontrado!)");
+
+            return $objCliente;
+        }
+    }
+
+    function buscarPorNome($nome)
+    {
+
+        $sql = "
+			select
+				codCliente,
+				nome,
+				logradouro,
+				numero,
+				bairro,
+				cidade,
+				estado,
+                cep,
+				telefone,
+				celular,
+				cpf,
+				email,
+				datNascimento,
+                sexo,
+                profissao,
+                identidade,
+                obs,
+                usuario,
+                senha
+			from
+				cliente
+			where
+				nome like '%" . $nome . "%'
+			order by
+				nome ASC
+		";
+
+        $objBanco = new Banco();
+        $dados = $objBanco->executar($sql);
+        $linhas = mysql_num_rows($dados);
+
+        $objClientes = array();
+
+        for ($i = 0; $i < $linhas; $i++) {
+
+            $codCliente = mysql_result($dados, $i, 'codCliente');
+            $nome = mysql_result($dados, $i, 'nome');
+            $logradouro = mysql_result($dados, $i, 'logradouro');
+            $numero = mysql_result($dados, $i, 'numero');
+            $bairro = mysql_result($dados, $i, 'bairro');
+            $cidade = mysql_result($dados, $i, 'cidade');
+            $estado = mysql_result($dados, $i, 'estado');
+            $cep = mysql_result($dados, $i, 'cep');
+            $telefone = mysql_result($dados, $i, 'telefone');
+            $celular = mysql_result($dados, $i, 'celular');
+            $cpf = mysql_result($dados, $i, 'cpf');
+            $email = mysql_result($dados, $i, 'email');
+            $datNascimento = mysql_result($dados, $i, 'datNascimento');
+            $sexo = mysql_result($dados, $i, 'sexo');
+            $profissao = mysql_result($dados, $i, 'profissao');
+            $identidade = mysql_result($dados, $i, 'identidade');
+            $obs = mysql_result($dados, $i, 'obs');
+            $usuario = mysql_result($dados, $i, 'usuario');
+            $senha = mysql_result($dados, $i, 'senha');
+
+            $novaDat = explode('-', $datNascimento);
+            $novaData = $novaDat[2] . '/' . $novaDat[1] . '/' . $novaDat[0];
+
+            $objCliente = new Cliente;
+            $objCliente->set('codCliente', $codCliente);
+            $objCliente->set('nome', $nome);
+            $objCliente->set('logradouro', $logradouro);
+            $objCliente->set('numero', $numero);
+            $objCliente->set('bairro', $bairro);
+            $objCliente->set('cidade', $cidade);
+            $objCliente->set('estado', $estado);
+            $objCliente->set('cep', $cep);
+            $objCliente->set('telefone', $telefone);
+            $objCliente->set('celular', $celular);
+            $objCliente->set('cpf', $cpf);
+            $objCliente->set('email', $email);
+            $objCliente->set('datNascimento', $novaData);
+            $objCliente->set('sexo', $sexo);
+            $objCliente->set('profissao', $profissao);
+            $objCliente->set('identidade', $identidade);
+            $objCliente->set('obs', $obs);
+            $objCliente->set('usuario', $usuario);
+            $objCliente->set('senha', $senha);
+
+            array_push($objClientes, $objCliente);
+        }
+        return $objClientes;
+    }
+
+    function buscarData()
+    {
+        $data = date('Ymd');
+        $month = substr($data, 4, 2);
+        $sql = "
+			select
+				codCliente,
+				nome,
+				logradouro,
+				numero,
+				bairro,
+				cidade,
+				estado,
+                cep,
+				telefone,
+				celular,
+				cpf,
+				email,
+				datNascimento,
+                sexo,
+                profissao,
+                identidade,
+                obs,
+                usuario,
+                senha
+			from
+				cliente
+			where
+				MONTH(datNascimento) = '" . $month . "'
+			order by
+				nome ASC
+		";
+
+        $objBanco = new Banco();
+        $dados = $objBanco->executar($sql);
+        $linhas = mysql_num_rows($dados);
+
+        $objClientes = array();
+
+        for ($i = 0; $i < $linhas; $i++) {
+
+            $codCliente = mysql_result($dados, $i, 'codCliente');
+            $nome = mysql_result($dados, $i, 'nome');
+            $logradouro = mysql_result($dados, $i, 'logradouro');
+            $numero = mysql_result($dados, $i, 'numero');
+            $bairro = mysql_result($dados, $i, 'bairro');
+            $cidade = mysql_result($dados, $i, 'cidade');
+            $estado = mysql_result($dados, $i, 'estado');
+            $cep = mysql_result($dados, $i, 'cep');
+            $telefone = mysql_result($dados, $i, 'telefone');
+            $celular = mysql_result($dados, $i, 'celular');
+            $cpf = mysql_result($dados, $i, 'cpf');
+            $email = mysql_result($dados, $i, 'email');
+            $datNascimento = mysql_result($dados, $i, 'datNascimento');
+            $sexo = mysql_result($dados, $i, 'sexo');
+            $profissao = mysql_result($dados, $i, 'profissao');
+            $identidade = mysql_result($dados, $i, 'identidade');
+            $obs = mysql_result($dados, $i, 'obs');
+            $usuario = mysql_result($dados, $i, 'usuario');
+            $senha = mysql_result($dados, $i, 'senha');
+
+            $novaDat = explode('-', $datNascimento);
+            $novaData = $novaDat[2] . '/' . $novaDat[1] . '/' . $novaDat[0];
+
+            $objCliente = new Cliente;
+            $objCliente->set('codCliente', $codCliente);
+            $objCliente->set('nome', $nome);
+            $objCliente->set('logradouro', $logradouro);
+            $objCliente->set('numero', $numero);
+            $objCliente->set('bairro', $bairro);
+            $objCliente->set('cidade', $cidade);
+            $objCliente->set('estado', $estado);
+            $objCliente->set('cep', $cep);
+            $objCliente->set('telefone', $telefone);
+            $objCliente->set('celular', $celular);
+            $objCliente->set('cpf', $cpf);
+            $objCliente->set('email', $email);
+            $objCliente->set('datNascimento', $novaData);
+            $objCliente->set('sexo', $sexo);
+            $objCliente->set('profissao', $profissao);
+            $objCliente->set('identidade', $identidade);
+            $objCliente->set('obs', $obs);
+            $objCliente->set('usuario', $usuario);
+            $objCliente->set('senha', $senha);
+
+            array_push($objClientes, $objCliente);
+        }
+        return $objClientes;
+    }
+
+    function selectClientes($codClienteSelecionado)
+    {
+
+        $sql = "
+			select
+				codCliente,
+				nome
+			from
+				cliente
+			order by
+				nome ASC
+		";
+
+        $objBanco = new Banco();
+        $dados = $objBanco->executar($sql);
+        $linhas = mysql_num_rows($dados);
+
+        $selectClientes = "<select name ='cliente'>";
+        $selectClientes .= "<option>Selecione o Cliente</option>";
+        for ($i = 0; $i < $linhas; $i++) {
+
+            $codCliente = mysql_result($dados, $i, 'codCliente');
+            $nome = mysql_result($dados, $i, 'nome');
+            if ($codCliente == $codClienteSelecionado) {
+                $selected = " selected=selected";
+            } else {
+                $selected = "";
+            }
+            $selectClientes .= "<option value='$codCliente'" . $selected . ">$nome</option>";
+        }
+        $selectClientes .= "</select>";
+
+        echo $selectClientes;
+    }
+}
