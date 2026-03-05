@@ -1,0 +1,2 @@
+[03-Mar-2026 23:57:52 UTC] PHP Warning:  mysqli::mysqli(): Headers and client library minor version mismatch. Headers:101113 Library:100505 in /home/bigcellc/public_html/ads2025/Banco/mostraBanco.php on line 9
+[04-Mar-2026 00:06:18 UTC] PHP Warning:  mysqli::mysqli(): Headers and client library minor version mismatch. Headers:101113 Library:100505 in /home/bigcellc/public_html/ads2025/Banco/mostraBanco.php on line 9
