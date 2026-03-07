@@ -12,7 +12,7 @@
     <div class="login-container">
         <h1>BigCell Celulares</h1>
 
-        <form action="index.php" method="POST">
+        <form action="login.php" method="POST">
 
             <div>
                 <label for="usuario">Usuário:</label>
